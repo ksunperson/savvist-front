@@ -5,12 +5,10 @@
 @font-face {
   font-family: "UhBee JJIBBABBA";
   font-weight: normal;
-  src: url("../fonts/UhBee JJIBBABBA.ttf") format("truetype");
+  src: url("/UhBee JJIBBABBA.ttf") format("truetype");
 }
 
-html {
-  font-family: "Uhbee JJIBBABBA";
-}
+html,
 body,
 div,
 span,
@@ -136,11 +134,15 @@ table {
 }
 
 body {
-  padding-top: 50px;
+  /* padding-top: 50px; */
   font-size: 18px;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.custom-font {
+  font-family: "UhBee JJIBBABBA";
 }
