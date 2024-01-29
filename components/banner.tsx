@@ -36,14 +36,14 @@ export default function Banner() {
           </svg>
           Join Savvist and enjoy delightful shopping!
         </p>
-        <a
+        <Link
           href="#"
           className="flex-none rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
         >
           <Link href="/login">
             Register now
           </Link>   <span aria-hidden="true">&rarr;</span>
-        </a>
+        </Link>
       </div>
       <div className="flex flex-1 justify-end">
         <button type="button" className="-m-3 p-3 focus-visible:outline-offset-[-4px]">
