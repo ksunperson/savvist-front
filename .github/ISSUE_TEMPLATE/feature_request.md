@@ -7,15 +7,12 @@ assignees: ''
 
 ---
 
-**Description**
-***
+## Description
 이곳에 설명을 작성하세요.
 
-**Todo**
-***
-[ ] todo
-[ ] todo
+## Todo
+- [ ] todo
+- [ ] todo
 
-**ETC**
-***
+## ETC
 기타사항
