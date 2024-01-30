@@ -2,7 +2,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import HeaderNavigation from "@/components/header/header-nav";
-import Banner from "@/components/banner";
 
 export const metadata: Metadata = {
   title: {
@@ -19,7 +18,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <Banner /> */}
         <HeaderNavigation />
         {children}
       </body>
