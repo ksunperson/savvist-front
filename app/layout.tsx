@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Banner />
+        {/* <Banner /> */}
         <HeaderNavigation />
         {children}
       </body>

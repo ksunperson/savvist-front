@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import ShopNowButton from "@/components/shop-now-button";
-import HeaderTitle from "@/components/header/header-title";
+import Header from "@/components/header/header";
 
 export const metadata: Metadata = {
   title: "Home"
@@ -9,8 +8,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div>
-      <HeaderTitle />
-      <ShopNowButton />
+      <Header />
     </div>
   )
 }
