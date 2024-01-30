@@ -28,7 +28,7 @@ export default function SideBar({ onClose }: SideBarProps) {
 
   return (
     <div className="flex">
-      <div className={` bg-blue-950 h-screen p-5 pt-8 ${open ? "w-72" : "w-20"} duration-300 absolute`}>
+      <div className={` bg-stone-700 bg-opacity-80 h-screen p-5 pt-8 ${open ? "w-72" : "w-20"} duration-300 absolute`}>
         <BsArrowLeftShort className={`bg-white text-blue-950
           text-3xl rounded-full absolute -right-3 top-9 border border-blue-950
           cursor-pointer ${!open && 'rotate-180'}`}
