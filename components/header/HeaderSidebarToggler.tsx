@@ -12,7 +12,7 @@ export default function HeaderSidebarToggler() {
   return (
     <div>
       {isSidebarOpen && <SideBar onClose={toggleSidebar} />}
-      <div className={`cursor-pointer fixed top-10 left-10 z-50  ${isSidebarOpen ? 'hidden ' : ''}`} onClick={toggleSidebar}>
+      <div className={`cursor-pointer fixed top-10 left-10 z-50  ${isSidebarOpen ? 'hidden ' : ''} `} onClick={toggleSidebar}>
         <BsThreeDots size={20} />
       </div>
     </div>
