@@ -3,7 +3,7 @@
 import HomeBrowseBtn from "../homepage/HomeBrowseBtn";
 import HomeHeader from "../homepage/HomeHeader";
 
-export default function Header() {
+export default function HomePage() {
   return (
     <div>
       <HomeHeader />

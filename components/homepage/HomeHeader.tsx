@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default function HeaderTitle() {
+export default function HomeHeader() {
   return (
     <div className='custom-font'>
       <Link href="/">
