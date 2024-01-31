@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import HeaderSidebar from "./header-sidebar";
+import HeaderSidebarToggler from "./HeaderSidebarToggler";
 
 export default function HeaderNavigation({ showLogo = false }) {
   const path = usePathname();
 
   return (
     <div className="flex justify-between custom-font">
-      <HeaderSidebar />
+      <HeaderSidebarToggler />
       {/* 상단로고는 path !== "/"일 때 나타남 */}
       {
         (path !== "/" || showLogo) && (
