@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { BsChevronDown, BsX } from "react-icons/bs"
+import React from "react"
 
 interface SideBarProps {
   onClose: () => void;
@@ -26,12 +27,11 @@ export default function SideBar({ onClose }: SideBarProps) {
 
   return (
     <div className="flex">
-      <div
-        className={`bg-neutral-200 bg-opacity-80 h-screen p-5 pt-48 ${open ? "w-96" : ""} absolute`}>
+      <div className={`bg-neutral-200 bg-opacity-80 h-screen p-5 pt-48 ${open ? "w-96" : ""} absolute`}>
         {/* 사이드바 X 버튼 */}
         <BsX className="text-black
-          text-2xl absolute right-5 top-8
-          cursor-pointer"
+            text-2xl absolute right-5 top-8
+            cursor-pointer"
           onClick={() => {
             setOpen(!open);
             onClose();
@@ -66,7 +66,6 @@ export default function SideBar({ onClose }: SideBarProps) {
           ))}
         </ul>
       </div>
-
     </div>
   )
 }
