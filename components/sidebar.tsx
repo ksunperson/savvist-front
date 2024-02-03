@@ -42,7 +42,7 @@ export default function SideBar({ onClose }: SideBarProps) {
           {Menus.map((menu, index) => (
             <>
               {/* menu */}
-              <li key={index} className={`text-black text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:text-my-green ${menu.spacing ? "mt-9" : "mt-2"}`}>
+              <li key={index} className={`text-black text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:text-custom-green ${menu.spacing ? "mt-9" : "mt-2"}`}>
                 <span className={`flex-1 duration-200 ${!open && "hidden"}`}>
                   {menu.title}
                 </span>
@@ -56,7 +56,7 @@ export default function SideBar({ onClose }: SideBarProps) {
               {menu.submenu && submenuOpen && open && (
                 <ul>
                   {menu.submenuItems?.map((submenuItem, index) => (
-                    <li key={index} className="text-black text-sm flex items-center gap-x-4 hover:text-my-green cursor-pointer p-2 px-5">
+                    <li key={index} className="text-black text-sm flex items-center gap-x-4 hover:text-custom-green cursor-pointer p-2 px-5">
                       {submenuItem.title}
                     </li>
                   ))}
