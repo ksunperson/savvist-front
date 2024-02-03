@@ -1,13 +1,9 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Shop"
-}
+import ProductPageHeader from "@/components/product/components/ProductPageHeader";
 
 export default function ProductPage() {
   return (
-    <div className="mt-20">
-      product 대문
+    <div>
+      <ProductPageHeader />
     </div>
   )
 }
