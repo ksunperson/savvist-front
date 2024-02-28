@@ -6,10 +6,10 @@ import ProductCardDescription from './ProductCardDescription';
 
 export default function ProductCard() {
   const productData = [
-    { name: '모남희', description: '모남희 키링(브레드)', price: '82,000' },
-    { name: '모남희', description: '모남희 키링(화이트)', price: '80,000' },
-    { name: '모남희', description: '모남희 키링(레드)', price: '90,000' },
-    { name: '모남희', description: '모남희 키링(화이트)', price: '83,000' },
+    { id: 1, name: '모남희1', description: '모남희 키링(브레드)', price: '82,000' },
+    { id: 2, name: '모남희2', description: '모남희 키링(화이트)', price: '80,000' },
+    { id: 3, name: '모남희3', description: '모남희 키링(레드)', price: '90,000' },
+    { id: 4, name: '모남희4', description: '모남희 키링(화이트)', price: '83,000' },
   ];
 
   const [numberOfColumns, setNumberOfColumns] = useState<number>(4);
@@ -17,8 +17,8 @@ export default function ProductCard() {
   useEffect(() => {
     let resizeTimer: ReturnType<typeof setTimeout>;
 
+    // handleResize: 현재 창의 크기 가져와서 적절한 cols 값으로 설정
     const handleResize = () => {
-      // handleResize: 현재 창의 크기 가져와서 적절한 cols 값으로 설정
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         const width = window.innerWidth;
