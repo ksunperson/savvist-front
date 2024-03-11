@@ -8,12 +8,12 @@ export default function HeaderNavigation({ showLogo = false }) {
   const path = usePathname();
 
   return (
-    <div className="flex justify-between custom-font">
+    <div className="flex justify-between">
       <HeaderSidebarToggler />
       {/* 상단로고는 path !== "/"일 때 나타남 */}
       {
         (path !== "/" || showLogo) && (
-          <div className="text-3xl pt-10">
+          <div className="text-3xl pt-10 custom-font">
             <Link href="/">
               savvist
             </Link>
