@@ -20,10 +20,10 @@ export default function HeaderNavigation({ showLogo = false }) {
           </div>
         )
       }
-      {/* header 오른쪽 로그인과 카트 버튼*/}
+      {/* header 오른쪽 회원가입과 카트 버튼*/}
       <div className="flex pt-10 mr-10" >
-        <Link href="/login">
-          <div className="mr-6">로그인</div>
+        <Link href="/join">
+          <div className="mr-6">회원가입</div>
         </Link>
         <div>카트</div>
       </div>
