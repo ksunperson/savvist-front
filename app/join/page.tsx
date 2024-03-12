@@ -1,10 +1,9 @@
+import Join from "@/components/join/join";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Join"
+  title: "회원가입"
 }
-
-import Join from "@/components/join/join";
 
 export default function JoinPage() {
   return (
