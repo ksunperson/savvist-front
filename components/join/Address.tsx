@@ -52,6 +52,5 @@ export default function Address() {
         placeholder="상세주소"
       />
     </div>
-
   );
 }
