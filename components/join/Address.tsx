@@ -29,6 +29,7 @@ export default function Address() {
       <input
         onClick={onClickAddr}
         id="zipNo"
+        name="zipNo"
         type="text"
         placeholder="우편번호를 입력하세요"
         className="p-2 w-64 placeholder:text-gray-400 sm:text-xs outline-none border"
@@ -38,6 +39,7 @@ export default function Address() {
       <br />
       <input
         id="addr"
+        name="addr"
         type="text"
         readOnly
         onClick={onClickAddr}
@@ -47,6 +49,7 @@ export default function Address() {
       <br />
       <input
         id="addrDetail"
+        name="addrDetail"
         type="text"
         className="p-2 w-64 placeholder:text-gray-400 sm:text-xs outline-none border"
         placeholder="상세주소"
