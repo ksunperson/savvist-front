@@ -1,4 +1,4 @@
-import Join from "@/components/join/join";
+import Join from "@/components/join/Join";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
