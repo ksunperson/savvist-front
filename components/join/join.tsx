@@ -1,18 +1,24 @@
 "use client"
 
-import Address from "./Address";
+import { useState } from "react";
+import Address, { IAddr } from "./Address";
 import { useForm, SubmitHandler } from 'react-hook-form';
 
+
 interface IForm {
-  username: "string",
-  userid: "string",
-  password: "string",
-  passwordConfirm: "string",
-  nickname: "string",
-  phone: "number",
-  email: "string",
-  address: "string",
+  username: string;
+  userid: string;
+  password: string;
+  passwordConfirm: string;
+  nickname: string;
+  phone: string;
+  email: string;
+  address: string;
+  zipNo: string;
+  addr: string;
+  addrDetail: string;
 }
+
 
 export default function Join() {
   const {
@@ -24,8 +30,12 @@ export default function Join() {
     formState: { errors },
   } = useForm<IForm>({ mode: "onChange" })
 
+  const [addressData, setAddressData] = useState<IAddr>({ address: "", zonecode: "", zipNo: "", addr: "", addrDetail: "" });
   const onSubmit: SubmitHandler<IForm> = async (data) => {
     try {
+      data.zipNo = addressData.zonecode;
+      data.addr = addressData.address;
+      data.addrDetail = data.addrDetail;
       const response = await fetch('http://localhost:5000/auth/join', {
         method: 'POST',
         headers: {
@@ -34,10 +44,10 @@ export default function Join() {
         body: JSON.stringify(data)
       });
       if (response.ok) {
-        // 서버가 성공적으로 응답했을 때 수행할 동작
+        // 서버가 성공적으로 응답했을 때
         console.log('회원가입이 성공적으로 완료되었습니다.');
       } else {
-        // 서버가 오류 응답했을 때 수행할 동작
+        // 서버가 오류 응답했을 때
         console.error('회원가입 중 오류가 발생했습니다.');
       }
     } catch (error) {
@@ -230,7 +240,7 @@ export default function Join() {
               주소
             </label>
             <div className="flex mt-2">
-              <Address />
+              <Address setAddressData={setAddressData} />
             </div>
           </div>
         </div>
