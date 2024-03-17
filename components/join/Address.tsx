@@ -14,11 +14,7 @@ export interface IAddr {
   addrDetail: string;
 }
 
-interface AddressProps {
-  setAddressData: (data: IAddr) => void;
-}
-
-export default function Address({ setAddressData }: AddressProps) {
+export default function Address() {
   const onClickAddr = () => {
     new window.daum.Postcode({
       onComplete: function (data: IAddr) {
@@ -27,10 +23,9 @@ export default function Address({ setAddressData }: AddressProps) {
         (document.getElementById("zipNo") as HTMLInputElement).value =
           data.zonecode;
         document.getElementById("addrDetail")?.focus();
-        setAddressData(data); // 부모 컴포넌트로 주소 정보 전달
       },
     }).open();
-  };
+  }
 
   return (
     <div>

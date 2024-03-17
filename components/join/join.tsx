@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from "react";
-import Address, { IAddr } from "./Address";
-import { useForm, SubmitHandler } from 'react-hook-form';
+import Address from "./Address";
+import { useForm } from 'react-hook-form';
 
 
 interface IForm {
@@ -24,40 +23,12 @@ export default function Join() {
   const {
     register,
     watch,
-    handleSubmit,
-    setError,
-    clearErrors,
     formState: { errors },
   } = useForm<IForm>({ mode: "onChange" })
 
-  const [addressData, setAddressData] = useState<IAddr>({ address: "", zonecode: "", zipNo: "", addr: "", addrDetail: "" });
-  const onSubmit: SubmitHandler<IForm> = async (data) => {
-    try {
-      data.zipNo = addressData.zonecode;
-      data.addr = addressData.address;
-      data.addrDetail = data.addrDetail;
-      const response = await fetch('http://localhost:5000/auth/join', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-      if (response.ok) {
-        // 서버가 성공적으로 응답했을 때
-        console.log('회원가입이 성공적으로 완료되었습니다.');
-      } else {
-        // 서버가 오류 응답했을 때
-        console.error('회원가입 중 오류가 발생했습니다.');
-      }
-    } catch (error) {
-      console.error('네트워크 오류:', error);
-    }
-  };
-
   return (
     <div className="flex justify-center items-center mt-8">
-      <form action="http://localhost:5000/auth/join" method="post" onSubmit={handleSubmit(onSubmit)}>
+      <form action="http://localhost:5000/auth/join" method="post">
         <div className="space-y-12 m-20">
           <h2 className="text-center font-semibold sm:text-xl">회원가입</h2>
           <div>
@@ -240,7 +211,7 @@ export default function Join() {
               주소
             </label>
             <div className="flex mt-2">
-              <Address setAddressData={setAddressData} />
+              <Address />
             </div>
           </div>
         </div>
