@@ -17,23 +17,34 @@ interface IForm {
 export default function Join() {
   const {
     register,
+    watch,
     handleSubmit,
     setError,
+    clearErrors,
     formState: { errors },
   } = useForm<IForm>({ mode: "onChange" })
 
   const onSubmit: SubmitHandler<IForm> = async (data) => {
     try {
-      if (data.password !== data.passwordConfirm) {
-        setError('passwordConfirm', {
-          message: '비밀번호가 일치하지 않습니다.',
-        });
-        return; // 비밀번호가 일치하지 않으면 함수 종료
+      const response = await fetch('http://localhost:5000/auth/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        // 서버가 성공적으로 응답했을 때 수행할 동작
+        console.log('회원가입이 성공적으로 완료되었습니다.');
+      } else {
+        // 서버가 오류 응답했을 때 수행할 동작
+        console.error('회원가입 중 오류가 발생했습니다.');
       }
     } catch (error) {
-      console.error(error);
+      console.error('네트워크 오류:', error);
     }
   };
+
   return (
     <div className="flex justify-center items-center mt-8">
       <form action="http://localhost:5000/auth/join" method="post" onSubmit={handleSubmit(onSubmit)}>
@@ -53,8 +64,13 @@ export default function Join() {
                   required: "이름은 필수 입력입니다.",
                   minLength: {
                     value: 2,
-                    message: "2글자 이상 입력해주세요"
-                  }
+                    message: "2글자 이상 입력해주세요."
+                  },
+                  pattern: {
+                    value:
+                      /^[가-힣]{2,5}$/,
+                    message: "2~5자의 한글만 사용 가능합니다.",
+                  },
                 })}
               />
             </div>
@@ -76,7 +92,12 @@ export default function Join() {
                   minLength: {
                     value: 6,
                     message: "6글자 이상 입력해주세요"
-                  }
+                  },
+                  pattern: {
+                    value:
+                      /^[a-z][a-z0-9]{5,19}$/,
+                    message: "6~20자의 영문 소문자와 숫자만 사용 가능합니다.",
+                  },
                 })}
               />
               <button className="bg-custom-green text-white font-bold text-xs py-2 px-4 ml-2 rounded w-30">
@@ -84,24 +105,6 @@ export default function Join() {
               </button>
             </div>
             {errors.userid && <p className="text-xs text-red-500" role="alert">{errors.userid.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="nickname" className="block text-sm font-medium">
-              닉네임
-            </label>
-            <div className="flex mt-2">
-              <input
-                type="text"
-                id="nickname"
-                autoComplete="nickname"
-                className="block p-2 w-64 placeholder:text-gray-400 sm:text-xs outline-none border"
-                placeholder="닉네임 입력"
-                {...register("nickname", {
-                  required: "닉네임은 필수 입력입니다.",
-                })}
-              />
-            </div>
-            {errors.nickname && <p className="text-xs text-red-500" role="alert">{errors.nickname.message}</p>}
           </div>
           <div>
             <label htmlFor="password" className="block text-sm font-medium">
@@ -113,7 +116,7 @@ export default function Join() {
                 id="password"
                 autoComplete="password"
                 className="block p-2 w-64 placeholder:text-gray-400 sm:text-xs outline-none border"
-                placeholder="비밀번호 입력(문자, 숫자, 특수문자 포함 8~16자)"
+                placeholder="비밀번호 입력(대소문자, 숫자, 특수문자 포함 8~16자)"
                 {...register("password", {
                   required: "비밀번호는 필수 입력입니다.",
                   minLength: {
@@ -122,7 +125,12 @@ export default function Join() {
                   },
                   maxLength: {
                     value: 16,
-                    message: "16자리 이하의 비밀번호만 사용가능합니다🥲",
+                    message: "16자리 이하의 비밀번호만 사용 가능합니다🥲",
+                  },
+                  pattern: {
+                    value:
+                      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=~!])(?!.*\s).{8,20}$/,
+                    message: "8~20자의 최소 하나의 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.",
                   },
                 })}
               />
@@ -142,10 +150,34 @@ export default function Join() {
                 placeholder="비밀번호 입력(문자, 숫자, 특수문자 포함 8~16자)"
                 {...register("passwordConfirm", {
                   required: "비밀번호 확인은 필수 입력입니다.",
+                  validate: value => value === watch('password') || '비밀번호가 일치하지 않습니다.😭😭'
                 })}
               />
             </div>
             {errors.passwordConfirm && <p className="text-xs text-red-500" role="alert">{errors.passwordConfirm.message}</p>}
+          </div>
+          <div>
+            <label htmlFor="nickname" className="block text-sm font-medium">
+              닉네임
+            </label>
+            <div className="flex mt-2">
+              <input
+                type="text"
+                id="nickname"
+                autoComplete="nickname"
+                className="block p-2 w-64 placeholder:text-gray-400 sm:text-xs outline-none border"
+                placeholder="닉네임 입력"
+                {...register("nickname", {
+                  required: "닉네임은 필수 입력입니다.",
+                  pattern: {
+                    value:
+                      /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/,
+                    message: "2~16자의 영문 소문자와 숫자 또는 한글만 사용 가능합니다.",
+                  },
+                })}
+              />
+            </div>
+            {errors.nickname && <p className="text-xs text-red-500" role="alert">{errors.nickname.message}</p>}
           </div>
           <div>
             <label htmlFor="phone" className="block text-sm font-medium">
@@ -160,6 +192,11 @@ export default function Join() {
                 placeholder="숫자만 입력해주세요"
                 {...register("phone", {
                   required: "휴대폰 번호는 필수 입력입니다.",
+                  pattern: {
+                    value:
+                      /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/,
+                    message: "휴대폰 번호를 정확히 입력해주세요.",
+                  },
                 })}
               />
             </div>
