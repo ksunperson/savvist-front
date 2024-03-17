@@ -6,20 +6,28 @@ declare global {
   }
 }
 
-interface IAddr {
+export interface IAddr {
   address: string;
   zonecode: string;
+  addr: string;
+  zipNo: string;
+  addrDetail: string;
 }
 
-export default function Address() {
+interface AddressProps {
+  setAddressData: (data: IAddr) => void;
+}
+
+export default function Address({ setAddressData }: AddressProps) {
   const onClickAddr = () => {
     new window.daum.Postcode({
-      oncomplete: function (data: IAddr) {
+      onComplete: function (data: IAddr) {
         (document.getElementById("addr") as HTMLInputElement).value =
           data.address;
         (document.getElementById("zipNo") as HTMLInputElement).value =
           data.zonecode;
         document.getElementById("addrDetail")?.focus();
+        setAddressData(data); // 부모 컴포넌트로 주소 정보 전달
       },
     }).open();
   };
