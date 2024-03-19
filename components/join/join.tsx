@@ -1,8 +1,8 @@
 "use client"
 
-import Address from "./Address";
-import { useForm } from 'react-hook-form';
-
+import { useState } from "react";
+import Address, { IAddr } from "./Address";
+import { useForm, SubmitHandler } from 'react-hook-form';
 
 interface IForm {
   username: string;
@@ -18,17 +18,68 @@ interface IForm {
   addrDetail: string;
 }
 
-
 export default function Join() {
+  const [duplicateUseridMessage, setDuplicateUseridMessage] = useState<string>('');
+  const [addressData, setAddressData] = useState<IAddr>({ address: "", zonecode: "", zipNo: "", addr: "", addrDetail: "" });
   const {
     register,
     watch,
+    reset,
+    handleSubmit,
     formState: { errors },
   } = useForm<IForm>({ mode: "onChange" })
 
+  const onSubmit: SubmitHandler<IForm> = async (data) => {
+    try {
+      data.zipNo = addressData.zonecode;
+      data.addr = addressData.address;
+      data.addrDetail = data.addrDetail;
+      const response = await fetch('http://localhost:5000/auth/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        console.log('회원가입이 성공적으로 완료되었습니다.');
+      } else {
+        console.error('회원가입 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.error('네트워크 오류:', error);
+    }
+  };
+
+  const handleCheckDuplicateUserid = async () => {
+    try {
+      const userid = watch('userid');
+      const useridCheckUrl = 'http://localhost:5000/auth/checkid'
+      const response = await fetch(useridCheckUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userid })
+      });
+      const result = await response.text();
+      if (response.ok) {
+        setDuplicateUseridMessage(result);
+      } else {
+        setDuplicateUseridMessage(result);
+      }
+    } catch (error) {
+      console.error('네트워크 오류:', error);
+      setDuplicateUseridMessage("네트워크 오류가 발생했습니다.");
+      // setIsDuplicateChecked(false); // 중복 확인 실패 시 상태 업데이트
+    }
+  };
+
   return (
     <div className="flex justify-center items-center mt-8">
-      <form action="http://localhost:5000/auth/join" method="post">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* <form action="http://localhost:5000/auth/join" method="post" onSubmit={handleSubmit(onSubmit)}> */}
+        {/* <form action="http://localhost:5000/auth/join" method="post"> */}
         <div className="space-y-12 m-20">
           <h2 className="text-center font-semibold sm:text-xl">회원가입</h2>
           <div>
@@ -81,10 +132,12 @@ export default function Join() {
                   },
                 })}
               />
-              <button className="bg-custom-green text-white font-bold text-xs py-2 px-4 ml-2 rounded w-30">
+              <button type="button" className="bg-custom-green text-white font-bold text-xs py-2 px-4 ml-2 rounded w-30"
+                onClick={handleCheckDuplicateUserid}>
                 중복 확인
               </button>
             </div>
+            {duplicateUseridMessage && <p className="text-xs text-red-500" role="alert">{duplicateUseridMessage}</p>}
             {errors.userid && <p className="text-xs text-red-500" role="alert">{errors.userid.message}</p>}
           </div>
           <div>
