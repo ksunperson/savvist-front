@@ -20,7 +20,7 @@ interface IForm {
 
 export default function Join() {
   const [duplicateUseridMessage, setDuplicateUseridMessage] = useState<string>('');
-  const [addressData, setAddressData] = useState<IAddr>({ address: "", zonecode: "", zipNo: "", addr: "", addrDetail: "" });
+  const [addressData, setAddressData] = useState<IAddr>({ address: "", zonecode: "", addrDetail: "" });
   const {
     register,
     watch,
@@ -33,7 +33,7 @@ export default function Join() {
     try {
       data.zipNo = addressData.zonecode;
       data.addr = addressData.address;
-      data.addrDetail = data.addrDetail;
+      data.addrDetail = addressData.addrDetail;
       const response = await fetch('http://localhost:5000/auth/join', {
         method: 'POST',
         headers: {
@@ -71,15 +71,12 @@ export default function Join() {
     } catch (error) {
       console.error('네트워크 오류:', error);
       setDuplicateUseridMessage("네트워크 오류가 발생했습니다.");
-      // setIsDuplicateChecked(false); // 중복 확인 실패 시 상태 업데이트
     }
   };
 
   return (
     <div className="flex justify-center items-center mt-8">
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/* <form action="http://localhost:5000/auth/join" method="post" onSubmit={handleSubmit(onSubmit)}> */}
-        {/* <form action="http://localhost:5000/auth/join" method="post"> */}
         <div className="space-y-12 m-20">
           <h2 className="text-center font-semibold sm:text-xl">회원가입</h2>
           <div>
@@ -264,7 +261,7 @@ export default function Join() {
               주소
             </label>
             <div className="flex mt-2">
-              <Address />
+              <Address onAddressChange={(addr: IAddr) => setAddressData(addr)} />
             </div>
           </div>
         </div>
