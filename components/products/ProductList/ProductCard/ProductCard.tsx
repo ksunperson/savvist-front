@@ -1,8 +1,10 @@
 "use client"
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ProductCardImage from './ProductCardImage';
 import ProductCardDescription from './ProductCardDescription';
+
+axios.defaults.withCredentials = true;
 
 export default function ProductCard() {
   const [productData, setProductData] = useState<any[]>([]);
@@ -11,7 +13,7 @@ export default function ProductCard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get('http://localhost:5000/products');
+        const response = await axios.get('http://localhost:5000/products/');
         console.log('응답 받음:', response.data);
         setProductData(response.data);
       } catch (error) {
@@ -55,4 +57,5 @@ export default function ProductCard() {
     </div>
   );
 }
+
 
