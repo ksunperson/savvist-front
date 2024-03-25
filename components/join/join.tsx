@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Address, { IAddr } from "./Address";
 import { useForm, SubmitHandler } from 'react-hook-form';
-
+import { useRouter } from 'next/navigation';
 interface IForm {
   username: string;
   userid: string;
@@ -19,15 +19,31 @@ interface IForm {
 }
 
 export default function Join() {
+  const router = useRouter(); // useRouter 훅을 사용하여 router 인스턴스를 얻습니다.
   const [duplicateUseridMessage, setDuplicateUseridMessage] = useState<string>('');
+  const [duplicateMessageColor, setDuplicateMessageColor] = useState<string>('');
   const [addressData, setAddressData] = useState<IAddr>({ address: "", zonecode: "", addrDetail: "" });
   const {
     register,
     watch,
-    reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<IForm>({ mode: "onChange" })
+  } = useForm<IForm>({
+    mode: "onChange",
+    defaultValues: {
+      username: "",
+      userid: "",
+      password: "",
+      passwordConfirm: "",
+      nickname: "",
+      phone: "",
+      email: "",
+      address: "",
+      zipNo: "",
+      addr: "",
+      addrDetail: "",
+    },
+  })
 
   const onSubmit: SubmitHandler<IForm> = async (data) => {
     try {
@@ -43,6 +59,7 @@ export default function Join() {
       });
       if (response.ok) {
         console.log('회원가입이 성공적으로 완료되었습니다.');
+        router.push("/join/success");
       } else {
         console.error('회원가입 중 오류가 발생했습니다.');
       }
@@ -65,12 +82,15 @@ export default function Join() {
       const result = await response.text();
       if (response.ok) {
         setDuplicateUseridMessage(result);
+        setDuplicateMessageColor("text-green-500");
       } else {
         setDuplicateUseridMessage(result);
+        setDuplicateMessageColor("text-red-500");
       }
     } catch (error) {
       console.error('네트워크 오류:', error);
       setDuplicateUseridMessage("네트워크 오류가 발생했습니다.");
+      setDuplicateMessageColor("text-red-500");
     }
   };
 
@@ -134,7 +154,7 @@ export default function Join() {
                 중복 확인
               </button>
             </div>
-            {duplicateUseridMessage && <p className="text-xs text-red-500" role="alert">{duplicateUseridMessage}</p>}
+            {duplicateUseridMessage && <p className={`text-xs ${duplicateMessageColor}`} role="alert">{duplicateUseridMessage}</p>}
             {errors.userid && <p className="text-xs text-red-500" role="alert">{errors.userid.message}</p>}
           </div>
           <div>
