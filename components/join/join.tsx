@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Address, { IAddr } from "./Address";
 import { useForm, SubmitHandler } from 'react-hook-form';
+import axios from "axios";
 
 interface IForm {
   username: string;
@@ -55,22 +56,23 @@ export default function Join() {
     try {
       const userid = watch('userid');
       const useridCheckUrl = 'http://localhost:5000/auth/checkid'
-      const response = await fetch(useridCheckUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userid })
+      const response = await axios.post(useridCheckUrl, {
+        userid: userid,
       });
-      const result = await response.text();
-      if (response.ok) {
-        setDuplicateUseridMessage(result);
-      } else {
-        setDuplicateUseridMessage(result);
-      }
+
+      if (response) {
+        setDuplicateUseridMessage(response.data.message);
+      } 
     } catch (error) {
-      console.error('네트워크 오류:', error);
-      setDuplicateUseridMessage("네트워크 오류가 발생했습니다.");
+      if(error.response){
+        console.error('오류:', error);
+        setDuplicateUseridMessage(error.response.data.message);
+      }
+      else{
+        console.error('오류:', error);
+        setDuplicateUseridMessage(error.message);
+      }
+      
     }
   };
 
