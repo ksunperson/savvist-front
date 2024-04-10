@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function SignupSuccess() {
+export default function JoinSuccess() {
   return (
     <div className="justify-center items-center text-center">
       <div className="text-3xl pt-48 custom-font">
