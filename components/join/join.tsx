@@ -1,10 +1,14 @@
 "use client"
 
-import { useState, useContext } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import Address, { IAddr } from "./Address";
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-interface IForm {
+import { useForm, SubmitHandler, UseFormWatch } from 'react-hook-form';
+import ErrorMessage from "./ErrorMessage";
+import { useRouter } from "next/navigation";
+import useCheckDuplicate from './useCheckDuplicate';
+
+export interface IForm {
   username: string;
   userid: string;
   password: string;
@@ -18,15 +22,26 @@ interface IForm {
   addrDetail: string;
 }
 
+// userid는 [중복 확인] 버튼 사용으로 (handleCheckDuplicateUserid) 따로 구현
+type FieldName = 'nickname' | 'email' | 'phone';
+
 export default function Join() {
-  const router = useRouter(); // useRouter 훅을 사용하여 router 인스턴스를 얻습니다.
-  const [duplicateUseridMessage, setDuplicateUseridMessage] = useState<string>('');
-  const [duplicateMessageColor, setDuplicateMessageColor] = useState<string>('');
+  const router = useRouter();
   const [addressData, setAddressData] = useState<IAddr>({ address: "", zonecode: "", addrDetail: "" });
+  // 메시지 색상
+  const [nicknameMessageColor, setNicknameMessageColor] = useState<string>('');
+  const [emailMessageColor, setEmailMessageColor] = useState<string>('');
+  const [phoneMessageColor, setPhoneMessageColor] = useState<string>('');
+  // 메시지 문구
+  const [duplicateNicknameMessage, setDuplicateNicknameMessage] = useState<string>('');
+  const [duplicateUseridMessage, setDuplicateUseridMessage] = useState<string>('');
+  const [duplicatePhoneMessage, setDuplicatePhoneMessage] = useState<string>('');
+  const [duplicateEmailMessage, setDuplicateEmailMessage] = useState<string>('');
   const {
     register,
     watch,
     handleSubmit,
+    trigger,
     formState: { errors },
   } = useForm<IForm>({
     mode: "onChange",
@@ -44,6 +59,19 @@ export default function Join() {
       addrDetail: "",
     },
   })
+
+  const password = watch('password');
+  const passwordConfirm = watch('passwordConfirm');
+
+  useEffect(() => {
+    if (password && passwordConfirm) {
+      trigger('passwordConfirm')
+    }
+  }, [password, passwordConfirm, trigger]);
+
+  useCheckDuplicate(watch, 'nickname', 'http://localhost:5000/auth/checknickname', setDuplicateNicknameMessage, setNicknameMessageColor);
+  useCheckDuplicate(watch, 'email', 'http://localhost:5000/auth/checkemail', setDuplicateEmailMessage, setEmailMessageColor);
+  useCheckDuplicate(watch, 'phone', 'http://localhost:5000/auth/checkphone', setDuplicatePhoneMessage, setPhoneMessageColor);
 
   const onSubmit: SubmitHandler<IForm> = async (data) => {
     try {
@@ -68,29 +96,33 @@ export default function Join() {
     }
   };
 
+  const watchedUserid = watch('userid');
+  useEffect(() => {
+    setDuplicateUseridMessage('');
+  }, [watchedUserid]);
+
   const handleCheckDuplicateUserid = async () => {
-    try {
-      const userid = watch('userid');
-      const useridCheckUrl = 'http://localhost:5000/auth/checkid'
-      const response = await fetch(useridCheckUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userid })
-      });
-      const result = await response.text();
-      if (response.ok) {
-        setDuplicateUseridMessage(result);
-        setDuplicateMessageColor("text-green-500");
-      } else {
-        setDuplicateUseridMessage(result);
-        setDuplicateMessageColor("text-red-500");
+    const isValid = await trigger("userid");
+    if (isValid) {
+      try {
+        const userid = watch('userid');
+        const useridCheckUrl = 'http://localhost:5000/auth/checkid'
+        const response = await axios.post(useridCheckUrl, {
+          userid: userid,
+        });
+        if (response) {
+          setDuplicateUseridMessage(response.data.message);
+        }
+      } catch (error: any) {
+        if (error.response) {
+          console.error('오류:', error);
+          setDuplicateUseridMessage(error.response.data.message);
+        }
+        else {
+          console.error('오류:', error);
+          setDuplicateUseridMessage(error.message);
+        }
       }
-    } catch (error) {
-      console.error('네트워크 오류:', error);
-      setDuplicateUseridMessage("네트워크 오류가 발생했습니다.");
-      setDuplicateMessageColor("text-red-500");
     }
   };
 
@@ -154,9 +186,10 @@ export default function Join() {
                 중복 확인
               </button>
             </div>
-            {duplicateUseridMessage && <p className={`text-xs ${duplicateMessageColor}`} role="alert">{duplicateUseridMessage}</p>}
+            {duplicateUseridMessage && <p className="text-xs text-red-500" role="alert">{duplicateUseridMessage}</p>}
             {errors.userid && <p className="text-xs text-red-500" role="alert">{errors.userid.message}</p>}
           </div>
+
           <div>
             <label htmlFor="password" className="block text-sm font-medium">
               비밀번호
@@ -228,6 +261,7 @@ export default function Join() {
                 })}
               />
             </div>
+            {duplicateNicknameMessage && <ErrorMessage message={duplicateNicknameMessage} color={nicknameMessageColor} />}
             {errors.nickname && <p className="text-xs text-red-500" role="alert">{errors.nickname.message}</p>}
           </div>
           <div>
@@ -251,6 +285,7 @@ export default function Join() {
                 })}
               />
             </div>
+            {duplicatePhoneMessage && <ErrorMessage message={duplicatePhoneMessage} color={phoneMessageColor} />}
             {errors.phone && <p className="text-xs text-red-500" role="alert">{errors.phone.message}</p>}
           </div>
           <div>
@@ -274,6 +309,7 @@ export default function Join() {
                 })}
               />
             </div>
+            {duplicateEmailMessage && <ErrorMessage message={duplicateEmailMessage} color={emailMessageColor} />}
             {errors.email && <p className="text-xs text-red-500" role="alert">{errors.email.message}</p>}
           </div>
           <div>
