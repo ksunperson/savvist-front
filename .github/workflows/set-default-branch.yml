@@ -1,0 +1,25 @@
+name: Set Default Base Branch
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write  # PR을 수정할 수 있도록 write 권한 부여
+
+jobs:
+  set-default-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Authenticate GitHub CLI
+        run: gh auth status
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set PR Base to Develop
+        run: gh pr edit ${{ github.event.pull_request.number }} --base develop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
