@@ -20,6 +20,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set PR Base to Develop
-        run: gh pr edit ${{ github.event.pull_request.number }} --base develop
+        run: gh pr edit ${{ github.event.pull_request.number }} --base feat/join
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
